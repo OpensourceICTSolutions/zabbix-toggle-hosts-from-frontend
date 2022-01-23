@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright 2021 Opensource ICT Solutions B.V.
+# Copyright 2022 Opensource ICT Solutions B.V.
 # https://oicts.com
 #
-#version: 1.0.0
-#date: 11-02-2021
+#version: 2.0.0
+#date: 23-01-2022
 
 import sys
 import requests
@@ -14,8 +14,7 @@ import os
 import time
 
 url = 'https://example.com/zabbix/api_jsonrpc.php?'
-username = "username"
-password = "password"
+token = "PUT_YOUR_TOKEN_HERE"
 headers = {'Content-Type': 'application/json'}
 
 
@@ -23,7 +22,6 @@ state    = sys.argv[1]
 hostname = sys.argv[2] # enable and disable are possible
 
 def main():
-    token = login()
     hostid = hostid_get(token)
     if sys.argv[1].lower() == 'disable':
         event_dict,eventid_array = get_problems(hostid,token)
@@ -34,41 +32,6 @@ def main():
     else:
         print("DIE!")
     os.system('zabbix_server -R config_cache_reload')
-    logout(token)
-
-
-def login():
-    token = "null"
-
-    #Login payload
-    payload = {}
-    payload['jsonrpc'] = '2.0'
-    payload['method'] = 'user.login'
-    payload['params'] = {}
-    payload['params']['user'] = username
-    payload['params']['password'] = password
-    payload['id'] = 1
-
-    request = requests.post(url, data=json.dumps(payload), headers=headers)
-    data = request.json()
-
-    token = data["result"]
-    return token
-
-
-
-def logout(token):
-    payload = {}
-    payload['jsonrpc'] = '2.0'
-    payload['method'] = 'user.login'
-    payload['params'] = {}
-    payload['params']['user'] = username
-    payload['params']['password'] = password
-    payload['auth'] = token
-    payload['id'] = 1
-
-    request = requests.post(url, data=json.dumps(payload), headers=headers)
-
 
 
 
