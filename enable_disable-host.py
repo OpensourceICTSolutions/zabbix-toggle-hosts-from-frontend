@@ -27,11 +27,13 @@ def main():
         event_dict,eventid_array = get_problems(hostid,token)
         toggle_host(hostid,token)
         close_problems(eventid_array, token)
+        print("Host " + hostid + " disabled")
     elif sys.argv[1].lower() == 'enable':
         toggle_host(hostid, token)
+        print("Host " + hostid + " enabled")
     else:
         print("DIE!")
-    os.system('zabbix_server -R config_cache_reload')
+#    os.system('zabbix_server -R config_cache_reload')
 
 
 
